@@ -156,6 +156,27 @@ dropdownItems.forEach((dropdown) => {
   const toggle =
     dropdown.querySelector(".dropdown-toggle");
 
+  dropdown.addEventListener("focusin", () => {
+    if (window.innerWidth <= 900) {
+      return;
+    }
+
+    closeAllDropdowns(dropdown);
+    dropdown.classList.add("is-open");
+    toggle?.setAttribute("aria-expanded", "true");
+  });
+
+  dropdown.addEventListener("focusout", (event) => {
+    if (
+      window.innerWidth <= 900 ||
+      (event.relatedTarget instanceof Node && dropdown.contains(event.relatedTarget))
+    ) {
+      return;
+    }
+
+    closeDropdown(dropdown);
+  });
+
 
   // --------------------------------------
   // Mouse Enter
@@ -190,6 +211,10 @@ dropdownItems.forEach((dropdown) => {
 
     // Only desktop
     if (window.innerWidth <= 900) {
+      return;
+    }
+
+    if (dropdown.contains(document.activeElement)) {
       return;
     }
 
@@ -299,7 +324,6 @@ window.addEventListener("resize", () => {
 
   }
 
-
   // --------------------------------------
   // Switch to Mobile
   // --------------------------------------
@@ -307,5 +331,4 @@ window.addEventListener("resize", () => {
   if (window.innerWidth <= 900) {
     closeAllDropdowns();
   }
-
 });
